@@ -62,85 +62,110 @@ function App() {
 
   // PUBLIC_INTERFACE
   const renderSquare = useCallback((index) => {
+    const value = board[index];
+    const currentSymbol = isXNext ? 'X' : 'O';
+    
     return (
       <button
-        className={`square ${board[index] ? 'filled' : ''}`}
+        className={`square ${value ? 'filled' : ''} ${value ? (value === 'X' ? 'x-symbol' : 'o-symbol') : ''}`}
         onClick={() => handleClick(index)}
-        aria-label={`Square ${index + 1}, ${board[index] || 'empty'}`}
+        aria-label={`Square ${index + 1}, ${value || 'empty'}${!value && gameStatus === 'playing' ? `, click to place ${currentSymbol}` : ''}`}
+        data-preview={!value && gameStatus === 'playing' ? currentSymbol : ''}
+        disabled={gameStatus !== 'playing'}
       >
-        {board[index]}
+        {value}
       </button>
     );
-  }, [board, handleClick]);
+  }, [board, handleClick, isXNext, gameStatus]);
 
   const getStatusMessage = () => {
     if (gameStatus === 'won') {
-      return `🎉 Player ${winner} Wins!`;
+      return (
+        <>
+          <span role="img" aria-label="celebration">🎉</span>
+          Player {winner} Wins!
+        </>
+      );
     } else if (gameStatus === 'draw') {
-      return "🤝 It's a Draw!";
+      return (
+        <>
+          <span role="img" aria-label="handshake">🤝</span>
+          It's a Draw!
+        </>
+      );
     } else {
-      return `Current Player: ${isXNext ? 'X' : 'O'}`;
+      return (
+        <>
+          <span role="img" aria-label="game controller">🎮</span>
+          Current Player: {isXNext ? 'X' : 'O'}
+        </>
+      );
     }
   };
 
   return (
     <div className="App">
-      <div className="game-container">
-        <h1 className="game-title">Tic Tac Toe</h1>
+      <main className="game-container" role="main" aria-labelledby="game-title">
+        <header>
+          <h1 id="game-title" className="game-title">Tic Tac Toe</h1>
+        </header>
         
-        <div className="status-section">
-          <div className={`status-message ${gameStatus}`}>
+        <section className="status-section" aria-live="polite" aria-atomic="true">
+          <div className={`status-message ${gameStatus}`} role="status">
             {getStatusMessage()}
           </div>
           {gameStatus !== 'playing' && (
-            <div className="celebration">
-              {gameStatus === 'won' ? '🎊' : '🎲'}
+            <div className="celebration" aria-live="polite">
+              <span role="img" aria-label={gameStatus === 'won' ? 'confetti' : 'dice'}>
+                {gameStatus === 'won' ? '🎊' : '🎲'}
+              </span>
             </div>
           )}
-        </div>
+        </section>
 
-        <div className="board">
-          <div className="board-row">
+        <section className="board" role="grid" aria-label="Tic Tac Toe game board">
+          <div className="board-row" role="row">
             {renderSquare(0)}
             {renderSquare(1)}
             {renderSquare(2)}
           </div>
-          <div className="board-row">
+          <div className="board-row" role="row">
             {renderSquare(3)}
             {renderSquare(4)}
             {renderSquare(5)}
           </div>
-          <div className="board-row">
+          <div className="board-row" role="row">
             {renderSquare(6)}
             {renderSquare(7)}
             {renderSquare(8)}
           </div>
-        </div>
+        </section>
 
-        <div className="actions">
+        <section className="actions">
           <button 
             className="reset-button"
             onClick={resetGame}
             aria-label="Reset game and start over"
           >
-            🎮 New Game
+            <span role="img" aria-label="video game">🎮</span>
+            New Game
           </button>
-        </div>
+        </section>
 
-        <div className="game-info">
-          <div className="player-info">
-            <div className={`player ${isXNext && gameStatus === 'playing' ? 'active' : ''}`}>
-              <span className="player-symbol">X</span>
+        <footer className="game-info" role="contentinfo">
+          <div className="player-info" role="group" aria-label="Player information">
+            <div className={`player ${isXNext && gameStatus === 'playing' ? 'active' : ''}`} role="status">
+              <span className="player-symbol" aria-hidden="true">X</span>
               <span className="player-label">Player 1</span>
             </div>
-            <div className="vs">vs</div>
-            <div className={`player ${!isXNext && gameStatus === 'playing' ? 'active' : ''}`}>
-              <span className="player-symbol">O</span>
+            <div className="vs" aria-hidden="true">vs</div>
+            <div className={`player ${!isXNext && gameStatus === 'playing' ? 'active' : ''}`} role="status">
+              <span className="player-symbol" aria-hidden="true">O</span>
               <span className="player-label">Player 2</span>
             </div>
           </div>
-        </div>
-      </div>
+        </footer>
+      </main>
     </div>
   );
 }
