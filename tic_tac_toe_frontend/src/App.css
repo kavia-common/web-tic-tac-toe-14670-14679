@@ -1,104 +1,324 @@
-/* CSS Variables for Theme Management */
+/* CSS Variables for Tic Tac Toe Theme */
 :root {
-  /* Light theme colors */
-  --bg-primary: #ffffff;
-  --bg-secondary: #f8f9fa;
-  --text-primary: #282c34;
-  --text-secondary: #61dafb;
-  --border-color: #e9ecef;
-  --button-bg: #007bff;
-  --button-text: #ffffff;
+  --primary-color: #1976d2;
+  --accent-color: #e53935;
+  --secondary-color: #424242;
+  --background-color: #ffffff;
+  --surface-color: #f8f9fa;
+  --text-primary: #212121;
+  --text-secondary: #757575;
+  --border-color: #e0e0e0;
+  --shadow-light: 0 2px 4px rgba(0, 0, 0, 0.1);
+  --shadow-medium: 0 4px 8px rgba(0, 0, 0, 0.15);
+  --border-radius: 12px;
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-[data-theme="dark"] {
-  /* Dark theme colors */
-  --bg-primary: #1a1a1a;
-  --bg-secondary: #282c34;
-  --text-primary: #ffffff;
-  --text-secondary: #61dafb;
-  --border-color: #404040;
-  --button-bg: #0056b3;
-  --button-text: #ffffff;
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--background-color);
 }
 
 .App {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+}
+
+.game-container {
+  background-color: var(--background-color);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-medium);
+  padding: 2rem;
+  max-width: 400px;
+  width: 100%;
   text-align: center;
-  background-color: var(--bg-primary);
-  color: var(--text-primary);
-  min-height: 100vh;
-  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.game-title {
+  color: var(--primary-color);
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin: 0 0 1.5rem 0;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: var(--bg-secondary);
-  min-height: 100vh;
+.status-section {
+  margin-bottom: 1.5rem;
+  min-height: 60px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: var(--text-primary);
-  transition: background-color 0.3s ease;
-  position: relative;
 }
 
-.App-link {
-  color: var(--text-secondary);
-  transition: color 0.3s ease;
-}
-
-.theme-toggle {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  background-color: var(--button-bg);
-  color: var(--button-text);
-  border: none;
-  border-radius: 8px;
-  padding: 10px 20px;
-  font-size: 14px;
+.status-message {
+  font-size: 1.25rem;
   font-weight: 600;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  margin-bottom: 0.5rem;
+  transition: var(--transition);
+}
+
+.status-message.playing {
+  color: var(--text-primary);
+  background-color: var(--surface-color);
+}
+
+.status-message.won {
+  color: white;
+  background-color: var(--primary-color);
+  animation: pulse 2s infinite;
+}
+
+.status-message.draw {
+  color: white;
+  background-color: var(--secondary-color);
+}
+
+.celebration {
+  font-size: 2rem;
+  animation: bounce 1s ease-in-out infinite alternate;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+@keyframes bounce {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-10px); }
+}
+
+.board {
+  display: inline-block;
+  margin: 1.5rem 0;
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  box-shadow: var(--shadow-light);
+  background-color: var(--border-color);
+  padding: 4px;
+}
+
+.board-row {
+  display: flex;
+}
+
+.square {
+  width: 80px;
+  height: 80px;
+  background-color: var(--background-color);
+  border: none;
+  margin: 2px;
+  border-radius: 8px;
+  font-size: 2rem;
+  font-weight: bold;
   cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: var(--transition);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
 }
 
-.theme-toggle:hover {
+.square:hover {
+  background-color: var(--surface-color);
   transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-  opacity: 0.9;
+  box-shadow: var(--shadow-medium);
 }
 
-.theme-toggle:active {
+.square:active {
   transform: translateY(0);
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+.square.filled {
+  cursor: not-allowed;
+}
+
+.square.filled:hover {
+  transform: none;
+  background-color: var(--background-color);
+}
+
+/* X and O styling */
+.square:not(.filled):hover::before {
+  content: attr(data-symbol);
+  position: absolute;
+  color: var(--text-secondary);
+  opacity: 0.3;
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.actions {
+  margin: 1.5rem 0;
+}
+
+.reset-button {
+  background-color: var(--accent-color);
+  color: white;
+  border: none;
+  border-radius: var(--border-radius);
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  box-shadow: var(--shadow-light);
+}
+
+.reset-button:hover {
+  background-color: #d32f2f;
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-medium);
+}
+
+.reset-button:active {
+  transform: translateY(0);
+}
+
+.game-info {
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 2px solid var(--border-color);
+}
+
+.player-info {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.player {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  transition: var(--transition);
+  background-color: var(--surface-color);
+}
+
+.player.active {
+  background-color: var(--primary-color);
+  color: white;
+  transform: scale(1.05);
+}
+
+.player-symbol {
+  font-size: 1.5rem;
+  font-weight: bold;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.player-label {
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.vs {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+/* Responsive Design */
+@media (max-width: 480px) {
+  .App {
+    padding: 10px;
   }
-  to {
-    transform: rotate(360deg);
+  
+  .game-container {
+    padding: 1.5rem;
+    margin: 0;
+  }
+  
+  .game-title {
+    font-size: 2rem;
+  }
+  
+  .square {
+    width: 70px;
+    height: 70px;
+    font-size: 1.8rem;
+  }
+  
+  .status-message {
+    font-size: 1.1rem;
+  }
+  
+  .player-info {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .vs {
+    transform: rotate(90deg);
   }
 }
 
-/* Responsive design for mobile */
-@media (max-width: 768px) {
-  .theme-toggle {
-    top: 10px;
-    right: 10px;
-    padding: 8px 16px;
-    font-size: 12px;
+@media (max-width: 360px) {
+  .square {
+    width: 60px;
+    height: 60px;
+    font-size: 1.5rem;
   }
+  
+  .game-title {
+    font-size: 1.8rem;
+  }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .square {
+    border: 2px solid var(--text-primary);
+  }
+  
+  .status-message {
+    border: 2px solid currentColor;
+  }
+}
+
+/* Focus styles for accessibility */
+.square:focus,
+.reset-button:focus {
+  outline: 3px solid var(--primary-color);
+  outline-offset: 2px;
+}
+
+/* Color customization for X and O */
+.square:contains('X') {
+  color: var(--primary-color);
+}
+
+.square:contains('O') {
+  color: var(--accent-color);
 }
